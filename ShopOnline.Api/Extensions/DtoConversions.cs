@@ -38,5 +38,42 @@ namespace ShopOnline.Api.Extensions
                 CategoryName = productCategory.Name
             };
         }
+
+        public static IEnumerable<CartItemDto> ConvertToDto(this IEnumerable<CartItem> cartItems,
+                                                                IEnumerable<Product> products)
+        {
+            return (from cartItem in cartItems
+                    join product in products
+                    on cartItem.ProductID equals product.ID
+                    select new CartItemDto
+                    {
+                        ID = cartItem.ID,
+                        ProductID = cartItem.ProductID,
+                        ProductName = product.Name,
+                        ProductDescription = product.Description,
+                        ProductImageURL = product.ImageURL,
+                        Price = product.Price,
+                        CartID = cartItem.CartID,
+                        Quantity = cartItem.Quantity,
+                        TotalPrice = product.Price * cartItem.Quantity
+                    }).ToList();
+        }
+
+        public static CartItemDto ConvertToDto(this CartItem cartItem,
+                                                    Product product)
+        {
+            return new CartItemDto
+            {
+                ID = cartItem.ID,
+                ProductID = cartItem.ProductID,
+                ProductName = product.Name,
+                ProductDescription = product.Description,
+                ProductImageURL = product.ImageURL,
+                Price = product.Price,
+                CartID = cartItem.CartID,
+                Quantity = cartItem.Quantity,
+                TotalPrice = product.Price * cartItem.Quantity
+            };
+        }
     }
 }
