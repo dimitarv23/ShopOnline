@@ -22,7 +22,7 @@ namespace ShopOnline.Web.Services
             }
             catch (Exception)
             {
-
+                throw;
             }
         }
     }
