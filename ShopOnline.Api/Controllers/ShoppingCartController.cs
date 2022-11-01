@@ -17,10 +17,10 @@ namespace ShopOnline.Api.Controllers
         {
             _shoppingCartRepo = shoppingCartRepo;
             _productRepo = productRepo;
-        }
+        } 
 
         [HttpGet]
-        [Route("{usedID}/GetItems")]
+        [Route("{userID}/GetItems")]
         public async Task<ActionResult<IEnumerable<CartItemDto>>> GetItems(int userID)
         {
             try
@@ -48,7 +48,7 @@ namespace ShopOnline.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<CartItemDto>> GetItem(int id)
         {
             try
@@ -97,6 +97,34 @@ namespace ShopOnline.Api.Controllers
 
                 var newCartItemDto = newCartItem.ConvertToDto(product);
                 return CreatedAtAction(nameof(GetItem), new { id = newCartItemDto.ID }, newCartItemDto);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<CartItemDto>> DeleteItem(int id)
+        {
+            try
+            {
+                var cartItem = await _shoppingCartRepo.DeleteItem(id);
+
+                if (cartItem == null)
+                {
+                    return NotFound();
+                }
+
+                var product = await _productRepo.GetItem(cartItem.ProductID);
+
+                if (product == null) 
+                {
+                    return NotFound();
+                }
+
+                var cartItemDto = cartItem.ConvertToDto(product);
+                return Ok(cartItemDto);
             }
             catch (Exception ex)
             {

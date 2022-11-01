@@ -30,10 +30,10 @@ else
             </p>
 
             <div>
-                <button class="btn btn-success" @onclick="() => AddToCart_Click(new CartItemToAddDto{
+                <button class="btn btn-success" @onclick="() => (AddToCart_Click(new CartItemToAddDto{
                     CartID = HardCoded.CartID,
                     ProductID = Product.ID,
-                    Quantity = 1 })">
+                    Quantity = 1 }))">
                     <b>Add to Cart</b>
                 </button>
             </div>

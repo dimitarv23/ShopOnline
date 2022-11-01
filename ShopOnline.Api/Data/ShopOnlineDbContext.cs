@@ -19,8 +19,8 @@ namespace ShopOnline.Api.Data
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<User> Users { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseSqlServer("Server=DESKTOP-C09VDVU\\SQLEXPRESS;Database=ShopOnline;Trusted_Connection=True;");
+    //    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    //=> options.UseSqlServer("Server=DESKTOP-C09VDVU\\SQLEXPRESS;Database=ShopOnline;Trusted_Connection=True;");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
