@@ -45,5 +45,10 @@ namespace ShopOnline.Web.Pages
         {
             return groupedProductDto.FirstOrDefault(pg => pg.CategoryID == groupedProductDto.Key).CategoryName;
         }
+
+        protected int GetCategoryID(IGrouping<int, ProductDto> groupedProductDto)
+        {
+            return groupedProductDto.FirstOrDefault(pg => pg.CategoryID == groupedProductDto.Key).CategoryID;
+        }
     }
 }
