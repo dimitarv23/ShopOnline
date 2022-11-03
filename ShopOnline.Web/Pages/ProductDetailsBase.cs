@@ -18,15 +18,24 @@ namespace ShopOnline.Web.Pages
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        [Inject]
+        public IManageProductsLocalStorage ManageProductsLocalStorage { get; set; }
+
+        [Inject]
+        public IManageCartItemsLocalStorage ManageCartItemsLocalStorage { get; set; }
+
         public ProductDto Product { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        private List<CartItemDto> ShoppingCartItems { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                Product = await ProductService.GetItem(ID);
+                ShoppingCartItems = await ManageCartItemsLocalStorage.GetCollection();
+                Product = await GetProductByID(ID);
             }
             catch (Exception ex)
             {
@@ -39,6 +48,13 @@ namespace ShopOnline.Web.Pages
             try
             {
                 var cartItemDto = await ShoppingCartService.AddItem(itemToAddDto);
+
+                if (cartItemDto != null)
+                {
+                    ShoppingCartItems.Add(cartItemDto);
+                    await ManageCartItemsLocalStorage.SaveCollection(ShoppingCartItems);
+                }
+
                 NavigationManager.NavigateTo("/ShoppingCart");
             }
             catch (Exception)
@@ -46,6 +62,18 @@ namespace ShopOnline.Web.Pages
                 //Log Exception
                 throw;
             }
+        }
+
+        private async Task<ProductDto> GetProductByID(int id)
+        {
+            var productDtos = await ManageProductsLocalStorage.GetCollection();
+
+            if (productDtos != null)
+            {
+                return productDtos.SingleOrDefault(p => p.ID == id);
+            }
+
+            return null;
         }
     }
 }

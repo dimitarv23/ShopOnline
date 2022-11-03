@@ -21,13 +21,16 @@ namespace ShopOnline.Web.Pages
         [Inject]
         public IShoppingCartService ShoppingCartService { get; set; }
 
+        [Inject]
+        public IManageCartItemsLocalStorage ManageCartItemsLocalStorage { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                ShoppingCartItems = await ShoppingCartService.GetItems(HardCoded.UserID);
+                ShoppingCartItems = await ManageCartItemsLocalStorage.GetCollection();
 
-                if (ShoppingCartItems != null)
+                if (ShoppingCartItems != null && ShoppingCartItems.Count() > 0)
                 {
                     Guid orderGuid = Guid.NewGuid();
 
